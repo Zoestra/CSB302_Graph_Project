@@ -28,7 +28,7 @@ public class Dijkstra {
             if (i == 0) {
                 nodeDistances.put(nodes.get(0), 0);
             } else {
-                nodeDistances.put(nodes.get(i), -1);
+                nodeDistances.put(nodes.get(i), Integer.MAX_VALUE);
             }
             unvisitedNodes.add(nodes.get(i));
         }
@@ -43,6 +43,7 @@ public class Dijkstra {
        visitNode(nodes.get(0));
 
        while(!unvisitedNodes.isEmpty()){
+           travelEdge(queue.poll());
 
        }
 
@@ -58,6 +59,7 @@ public class Dijkstra {
 
     private void travelEdge(Edge targetEdge){
         // go from one node to the next
+
         // add distance of edge, assign distance value to hashtable
         // relax edges
     }

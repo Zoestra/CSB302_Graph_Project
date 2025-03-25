@@ -62,6 +62,7 @@ public class MyGraph {
                     this.graph.addEdge(edgeName, currentNode.getId(), targetNodeID, isDirected);
                     Edge newEdge = this.graph.getEdge(edgeName);
                     newEdge.setAttribute("weight", rand.nextInt(15));
+                    newEdge.setAttribute("totalDistance", newEdge.getAttribute("weight"));
                     this.edgeList.add(newEdge);
 
                     logger.log("get weight = " + newEdge.getAttribute("weight"));

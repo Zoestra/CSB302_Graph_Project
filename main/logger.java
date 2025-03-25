@@ -9,15 +9,14 @@ import java.util.Locale;
 
 public class logger {
   private static final boolean consoleLogging = true;
-  private static final String logFilePath = "application.log";
 
+  private static final String logFilePath = "application.log";
   private static final SimpleDateFormat formatter = new SimpleDateFormat("[yy.MM.dd.u zzz kk:mm:ss:SSS]", Locale.US);
   private static BufferedWriter logWriter = null;
 
-  static {initializeLogFile();}
-
-
-
+  static {
+    initializeLogFile();
+  }
 
   public static void log(String message) {
     String formatted = formatMessage(message);
@@ -36,16 +35,20 @@ public class logger {
     }
   }
 
-  public static void log(String code, Object object){
+  public static void log(Character code, Object object){
     switch(code){
-      case "n":
+      case 'n':
+        log("~~~~~~");
         log("new object");
         log(object);
+        log("~~~~~~");
         break;
 
-      case "c":
+      case 'c':
+        log("~~~~~~");
         log("object changed");
         log(object);
+        log("~~~~~~");
         break;
     }
 

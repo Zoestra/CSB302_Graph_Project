@@ -5,21 +5,19 @@ import org.graphstream.ui.view.Viewer;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Wrapper for graphstream's SingleGraph class
+ */
+// this class exists to narrow the complexity of the graphstream classes down to just what I need
 public class MyGraph {
     final private SingleGraph graph;
     final private String[] alpha = "ABCDEFGHJKLMNPQRSTUVWXYZ".split("");
     final private ArrayList<Node> nodeList = new ArrayList<>();
     final private ArrayList<Edge> edgeList = new ArrayList<>();
 
-    static{
-        System.setProperty("org.graphstream.ui", "swing");
-    }
-
-    // this class exists to narrow the complexity of the graphstream classes down to just what I need
 
     /**
-     * Wrapper for graphstream's SingleGraph class
-     * @param id id of the grapoh
+     * @param id id of the graph
      * @param numNodes number of nodes
      * @param isDirected
      */
@@ -27,7 +25,7 @@ public class MyGraph {
         logger.log("initializing graph");
         graph = new SingleGraph(id, false, true);
         createRandomGraph(numNodes, isDirected);
-        logger.log("n", this);
+        logger.log('n', this);
 
     }
 
@@ -35,8 +33,13 @@ public class MyGraph {
         Random rand = new Random();
 
         for (int i = 0; i < numNodes; i++){
-            this.graph.addNode(alpha[i]);
-            this.nodeList.add(this.graph.getNode(alpha[i]));
+            String nodeName = alpha[i % 24];
+            if(i > 23){
+                nodeName += nodeName;
+            }
+            Node newNode = this.graph.addNode(nodeName);
+            this.nodeList.add(newNode);
+            logger.log('n', newNode);
         }
 
         for (int i = 0; i < numNodes; i++){
@@ -44,6 +47,7 @@ public class MyGraph {
             Node currentNode = this.nodeList.get(i);
             // pick a random number of edges between 1 and 3
             int numEdges = rand.nextInt( 3) + 1;
+            logger.log("adding " + numEdges + " edges to node " + currentNode.getId());
             for (int j = 0; j < numEdges; j++){
                 // pick a random target node
                 int randIndex = rand.nextInt(numNodes);
@@ -59,6 +63,8 @@ public class MyGraph {
                     Edge newEdge = this.graph.getEdge(edgeName);
                     newEdge.setAttribute("weight", rand.nextInt(15));
                     this.edgeList.add(newEdge);
+
+                    logger.log("get weight = " + newEdge.getAttribute("weight"));
                 }
             }
         }

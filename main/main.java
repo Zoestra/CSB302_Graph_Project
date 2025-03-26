@@ -1,6 +1,7 @@
 public static boolean run(boolean runflag){
 
-  MyGraph graph = new MyGraph("1",26,  true);
+  MyGraph graph = new MyGraph("1",6,  false);
+  Dijkstra dijkstraDemo = new Dijkstra(graph);
   graph.showGraph();
 
   runflag = false;

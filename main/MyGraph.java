@@ -61,11 +61,11 @@ public class MyGraph {
                 if(!currentNode.hasEdgeBetween(targetNodeID)){
                     this.graph.addEdge(edgeName, currentNode.getId(), targetNodeID, isDirected);
                     Edge newEdge = this.graph.getEdge(edgeName);
-                    newEdge.setAttribute("weight", rand.nextInt(15));
-                    newEdge.setAttribute("totalDistance", newEdge.getAttribute("weight"));
+                    newEdge.setAttribute("distance", rand.nextInt(15) + 1);
+                    newEdge.setAttribute("totalDistance",  newEdge.getAttribute("distance"));
                     this.edgeList.add(newEdge);
 
-                    logger.log("get weight = " + newEdge.getAttribute("weight"));
+                    logger.log("get distance = " + newEdge.getAttribute("distance"));
                 }
             }
         }

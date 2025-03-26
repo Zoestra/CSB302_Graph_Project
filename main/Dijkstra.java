@@ -7,12 +7,25 @@ import java.util.PriorityQueue;
 
 public class Dijkstra {
     private HashMap<Node, Integer> nodeDistances;
+
+    public HashMap<Node, Integer> getNodeDistances() {
+        return nodeDistances;
+    }
+
+    public HashMap<Node, Node> getPreviousNode() {
+        return previousNode;
+    }
+
+    public ArrayList<Edge> getRelaxedEdges() {
+        return relaxedEdges;
+    }
+
     private HashMap<Node, Node> previousNode;
     private ArrayList<Edge> relaxedEdges;
     private ArrayList<Node> visitedNodes;
     private ArrayList<Node> unvisitedNodes = new ArrayList<>();
-    private PriorityQueue<Edge> queue = new PriorityQueue<>(
-            Comparator.comparingInt(e -> (int) e.getAttribute("totalDistance")));
+    private PriorityQueue<Node> queue = new PriorityQueue<>(
+            Comparator.comparingInt(e -> (int) e.getAttribute("distance")));
 
     public Dijkstra(MyGraph inputGraph) {
         ArrayList<Node> nodes = inputGraph.getNodeList();
@@ -26,67 +39,81 @@ public class Dijkstra {
         for (int i = 0; i < nodes.size(); i++) {
             if (i == 0) {
                 nodeDistances.put(nodes.get(0), 0);
+                nodes.get(0).setAttribute("distance", 0);
+                nodes.get(0).setAttribute("start", true);
             } else {
-                nodeDistances.put(nodes.get(i), null);
+                nodeDistances.put(nodes.get(i), Integer.MAX_VALUE);
+                nodes.get(i).setAttribute("distance", Integer.MAX_VALUE);
             }
             unvisitedNodes.add(nodes.get(i));
         }
-        logger.log('n', nodeDistances);
-
+            logger.log("Node Distances");
+            logger.log(nodeDistances);
+            logger.log("Unvisited Nodes");
+            logger.log(unvisitedNodes);
+            logger.log("starting shortest path");
+            logger.line();
         findShortestPath(nodes, edges);
     }
     private void findShortestPath(ArrayList<Node> nodes, ArrayList<Edge> edges) {
+           logger.log("visiting first node");
        visitNode(nodes.get(0));
 
        while(!unvisitedNodes.isEmpty()){
-           travelEdge(queue.poll());
+               logger.line();
+               logger.log("Queue = " + queue);
+               logger.log("Unvisited Nodes: " + unvisitedNodes);
+               logger.line();
+               logger.log("visiting node: " + queue.peek());
+               logger.line();
+           if(visitedNodes.contains(queue.peek())){
+               queue.poll();
+           }
+           else {
+               visitNode(queue.poll());
+           }
        }
     }
     private void visitNode(Node currentNode){
-        ArrayList<Edge> leavingEdges = new ArrayList<>();
-        currentNode.leavingEdges().forEach(leavingEdges::add);
-        int nodeDistance = nodeDistances.getOrDefault(currentNode, 0);
-        for (Edge edge : leavingEdges){ // for all the outgoing edges
-            Node nextNode = edge.getTargetNode();
-            int edgeDistance = (int) edge.getAttribute("distance");
-            int totalPathDistance = nodeDistance + edgeDistance;
-            // update the path distance of the edge
-            edge.setAttribute("totalDistance", totalPathDistance);
-            logger.log('c', edge);
-            logger.log("new distance for edge " + edge + ": " + totalPathDistance);
-            // if this path to next node is shorter, replace the values in
-            // nodeDistances and previousNode
-            if (totalPathDistance < nodeDistances.get(nextNode)){
-                nodeDistances.put(currentNode, totalPathDistance);
-                previousNode.put(edge.getTargetNode(), currentNode);
-            }
-
-            queue.add(edge);
-        }
         visitedNodes.add(currentNode);
         unvisitedNodes.remove(currentNode);
 
+        int distanceTravelled = (int) currentNode.getAttribute("distance");
 
-    }
+        // get neighbor node
+        ArrayList<Node> neighbors = new ArrayList<>();
+        currentNode.neighborNodes().forEach(neighbors::add);
+            logger.log("neighbor nodes = " + neighbors);
 
-    private void travelEdge(Edge targetEdge){
-        // go from one node to the next
-        Node targetNode = targetEdge.getTargetNode();
-        if ((int) targetEdge.getAttribute("totalDistance") < nodeDistances.get(targetNode)){
-            // relax edges
-            ArrayList<Edge> incomingEdges = new ArrayList<>();
-            targetNode.enteringEdges().forEach(incomingEdges::add);
-            for(Edge edge: incomingEdges){
-                if (edge != targetEdge){
-                    relaxEdge(edge);
+        // add neighbor nodes to distance and previous tables
+        for(Node neighbor : neighbors){
+            int distanceBetween = (int) currentNode.getEdgeBetween(neighbor).getAttribute("distance");
+            int totalDistance = distanceBetween + distanceTravelled;
+
+            if(!visitedNodes.contains(neighbor)){
+                    logger.log("checking neighbor " + neighbor);
+                if(totalDistance < nodeDistances.get(neighbor)){
+                    nodeDistances.put(neighbor, totalDistance);
+                    neighbor.setAttribute("distance", totalDistance );
+                    logger.log("updating neighbor " + neighbor);
+                    logger.log("new total distance = " + totalDistance);
+
+                    if(previousNode.containsKey(neighbor)) {
+                        Edge targetEdge = neighbor.getEdgeBetween(previousNode.get(neighbor));
+                        relaxEdge(targetEdge);
+                        previousNode.put(neighbor, currentNode);
+                        logger.log("updating " + neighbor + ":");
+                        logger.log("previous node = " + currentNode);
+                    }
+                    else{
+                        previousNode.put(neighbor, currentNode);
+                    }
                 }
+                queue.add(neighbor);
             }
-            visitNode(targetNode);
         }
-
-
-
-        // add distance of edge, assign distance value to hashtable
+            logger.log("updated node distances");
+            logger.log(nodeDistances);
     }
 
     private void relaxEdge(Edge targetEdge){

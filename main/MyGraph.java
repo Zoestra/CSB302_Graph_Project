@@ -41,13 +41,13 @@ public class MyGraph {
             this.nodeList.add(newNode);
             logger.log('n', newNode);
         }
-
+            logger.log("Adding edges to nodes");
         for (int i = 0; i < numNodes; i++){
             // for every new node
             Node currentNode = this.nodeList.get(i);
             // pick a random number of edges between 1 and 3
             int numEdges = rand.nextInt( 3) + 1;
-            logger.log("adding " + numEdges + " edges to node " + currentNode.getId());
+                logger.log("adding " + numEdges + " edges to node " + currentNode.getId());
             for (int j = 0; j < numEdges; j++){
                 // pick a random target node
                 int randIndex = rand.nextInt(numNodes);
@@ -62,12 +62,12 @@ public class MyGraph {
                     this.graph.addEdge(edgeName, currentNode.getId(), targetNodeID, isDirected);
                     Edge newEdge = this.graph.getEdge(edgeName);
                     newEdge.setAttribute("distance", rand.nextInt(15) + 1);
-                    newEdge.setAttribute("totalDistance",  newEdge.getAttribute("distance"));
                     this.edgeList.add(newEdge);
-
-                    logger.log("get distance = " + newEdge.getAttribute("distance"));
+                        logger.log("new edge: " + newEdge);
+                        logger.log("distance = " + newEdge.getAttribute("distance"));
                 }
             }
+            logger.line();
         }
     }
 

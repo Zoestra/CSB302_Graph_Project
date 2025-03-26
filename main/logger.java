@@ -38,22 +38,45 @@ public class logger {
   public static void log(Character code, Object object){
     switch(code){
       case 'n':
-        log("~~~~~~");
+        line();
         log("new object");
         log(object);
-        log("~~~~~~");
+        line();
         break;
 
       case 'c':
-        log("~~~~~~");
+        line();
         log("object changed");
         log(object);
-        log("~~~~~~");
+        line();
         break;
     }
 
   }
 
+  public static void log(Character code, Object object, String name){
+    switch(code){
+      case 'n':
+        line();
+        log("new object: " + name);
+        log(object);
+        break;
+      case 'c':
+        line();
+        log("updated object: " + name);
+        log(object);
+        break;
+    }
+  }
+
+  public static void line(){
+    String line = "~~~~~~~~~~~~~~~~~~~~~~~~~~";
+
+    writeToFile(line);
+    if(consoleLogging){
+      System.out.println(line);
+    }
+  }
   public static void log(Exception e) {
     String exceptName = e.getClass().getSimpleName();
     String exceptMessage = e.getMessage();
@@ -76,16 +99,17 @@ public class logger {
 
 
   public static void startup(){
-    logger.log("~~~~~~~~~~~~~~~~~~~");
-    logger.log("Application started");
+    line();
+    log("Application started");
 
   }
 
   public static void shutdown(){
-    logger.log("~~~~~~~~~~~~~~~~~~~");
-    logger.log("~Application Closed");
-    logger.log("~~~Shutting Down~~~");
-    logger.close();
+    line();
+    log("~Application Closed");
+    log("~~~Shutting Down~~~");
+    line();
+    close();
   }
 
 

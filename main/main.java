@@ -1,7 +1,7 @@
 public static boolean run(boolean runflag){
 
-  MyGraph graph = new MyGraph("1",6,  false);
-  Dijkstra dijkstraDemo = new Dijkstra(graph);
+  MyGraph dijkstraGraph = new MyGraph("1",6,  false, false);
+  Dijkstra dijkstraDemo = new Dijkstra(dijkstraGraph);
   logger.line();
   logger.log("previous node map: ");
   logger.log(dijkstraDemo.getPreviousNode());
@@ -9,9 +9,13 @@ public static boolean run(boolean runflag){
   logger.log(dijkstraDemo.getNodeDistances());
   logger.log("relaxed edges: ");
   logger.log(dijkstraDemo.getRelaxedEdges());
+  dijkstraGraph.showGraph();
 
+  MyGraph floydGraph = new MyGraph("2", 6, true, true);
+  FloydWarshall floydDem = new FloydWarshall(floydGraph);
 
-  graph.showGraph();
+  floydGraph.showGraph();
+
 
   runflag = false;
   return runflag;

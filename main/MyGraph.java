@@ -21,15 +21,15 @@ public class MyGraph {
      * @param numNodes number of nodes
      * @param isDirected
      */
-    public MyGraph(String id, int numNodes, boolean isDirected) {
+    public MyGraph(String id, int numNodes, boolean isDirected, boolean hasNegative) {
         logger.log("initializing graph");
         graph = new SingleGraph(id, false, true);
-        createRandomGraph(numNodes, isDirected);
+        createRandomGraph(numNodes, isDirected, hasNegative);
         logger.log('n', this);
 
     }
 
-    private void createRandomGraph(int numNodes, boolean isDirected){
+    private void createRandomGraph(int numNodes, boolean isDirected, boolean hasNegative){
         Random rand = new Random();
 
         for (int i = 0; i < numNodes; i++){
@@ -61,7 +61,11 @@ public class MyGraph {
                 if(!currentNode.hasEdgeBetween(targetNodeID)){
                     this.graph.addEdge(edgeName, currentNode.getId(), targetNodeID, isDirected);
                     Edge newEdge = this.graph.getEdge(edgeName);
-                    newEdge.setAttribute("distance", rand.nextInt(15) + 1);
+                    int distance = rand.nextInt(15) + 1;
+                    newEdge.setAttribute("distance", distance);
+                    if(hasNegative && rand.nextInt(10) < 2){
+                        newEdge.setAttribute("distance", -distance);
+                    }
                     this.edgeList.add(newEdge);
                         logger.log("new edge: " + newEdge);
                         logger.log("distance = " + newEdge.getAttribute("distance"));

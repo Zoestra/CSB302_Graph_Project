@@ -39,6 +39,7 @@ public class MyGraph {
             }
             Node newNode = this.graph.addNode(nodeName);
             this.nodeList.add(newNode);
+            newNode.setAttribute("ui.label", nodeName);
             logger.log('n', newNode);
         }
             logger.log("Adding edges to nodes");
@@ -69,6 +70,7 @@ public class MyGraph {
                     this.edgeList.add(newEdge);
                         logger.log("new edge: " + newEdge);
                         logger.log("distance = " + newEdge.getAttribute("distance"));
+                    newEdge.setAttribute("ui.label", distance);
                 }
             }
             logger.line();

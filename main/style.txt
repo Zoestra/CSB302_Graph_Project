@@ -1,0 +1,44 @@
+graph {
+    fill-color: #200D14;
+    padding: 50px;
+}
+
+node {
+    shape: circle;
+    size: 50px;
+    fill-mode: plain;
+    fill-color: #200D14;
+    stroke-mode: plain;
+    stroke-color: #5AEAF3;
+    stroke-width: 2px;
+
+    text-alignment: center;
+    text-size: 24;
+    text-color: #5AEAF3;
+    text-style: bold;
+    text-offset: 0, 0;
+}
+
+edge {
+    shape: line;
+    fill-color: #FF0000;
+    stroke-mode: plain;
+    stroke-color: #FF0000;
+    stroke-width: 1px;
+    arrow-size: 12px, 8px;
+
+    text-alignment: along;
+    text-size: 20;
+    text-color: #5AEAF3;
+    text-background-mode: rounded-box;
+    text-background-color: #200D14;
+    text-padding: 3px;
+}
+
+edge.relaxed {
+    stroke-mode: dashes;
+    stroke-color: #AAAAAA;
+    stroke-width: 1.5px;
+
+    text-color: #666666;
+}

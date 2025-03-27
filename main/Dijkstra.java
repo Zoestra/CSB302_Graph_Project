@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import org.graphstream.graph.*;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -8,23 +7,12 @@ import java.util.PriorityQueue;
 public class Dijkstra {
     private HashMap<Node, Integer> nodeDistances;
 
-    public HashMap<Node, Integer> getNodeDistances() {
-        return nodeDistances;
-    }
-
-    public HashMap<Node, Node> getPreviousNode() {
-        return previousNode;
-    }
-
-    public ArrayList<Edge> getRelaxedEdges() {
-        return relaxedEdges;
-    }
 
     private HashMap<Node, Node> previousNode;
     private ArrayList<Edge> relaxedEdges;
     private ArrayList<Node> visitedNodes;
     private ArrayList<Node> unvisitedNodes = new ArrayList<>();
-    private PriorityQueue<Node> queue = new PriorityQueue<>(
+    private PriorityQueue<Node> pQueue = new PriorityQueue<>(
             Comparator.comparingInt(e -> (int) e.getAttribute("distance")));
 
     public Dijkstra(MyGraph inputGraph) {
@@ -40,7 +28,7 @@ public class Dijkstra {
             if (i == 0) {
                 nodeDistances.put(nodes.get(0), 0);
                 nodes.get(0).setAttribute("distance", 0);
-                nodes.get(0).setAttribute("start", true);
+                nodes.get(0).setAttribute("ui.style", "stroke-color: #27C674;");
             } else {
                 nodeDistances.put(nodes.get(i), Integer.MAX_VALUE);
                 nodes.get(i).setAttribute("distance", Integer.MAX_VALUE);
@@ -53,24 +41,24 @@ public class Dijkstra {
             logger.log(unvisitedNodes);
             logger.log("starting shortest path");
             logger.line();
-        findShortestPath(nodes, edges);
+        findShortestPath(nodes);
     }
-    private void findShortestPath(ArrayList<Node> nodes, ArrayList<Edge> edges) {
+    private void findShortestPath(ArrayList<Node> nodes) {
            logger.log("visiting first node");
        visitNode(nodes.get(0));
 
-       while(!unvisitedNodes.isEmpty()){
+       while(!pQueue.isEmpty()){
                logger.line();
-               logger.log("Queue = " + queue);
+               logger.log("Queue = " + pQueue);
                logger.log("Unvisited Nodes: " + unvisitedNodes);
                logger.line();
-               logger.log("visiting node: " + queue.peek());
+               logger.log("visiting node: " + pQueue.peek());
                logger.line();
-           if(visitedNodes.contains(queue.peek())){
-               queue.poll();
+           if(visitedNodes.contains(pQueue.peek())){
+               pQueue.poll();
            }
            else {
-               visitNode(queue.poll());
+               visitNode(pQueue.poll());
            }
        }
     }
@@ -98,6 +86,8 @@ public class Dijkstra {
                     logger.log("updating neighbor " + neighbor);
                     logger.log("new total distance = " + totalDistance);
 
+                    pQueue.add(neighbor);
+
                     if(previousNode.containsKey(neighbor)) {
                         Edge targetEdge = neighbor.getEdgeBetween(previousNode.get(neighbor));
                         relaxEdge(targetEdge);
@@ -109,7 +99,6 @@ public class Dijkstra {
                         previousNode.put(neighbor, currentNode);
                     }
                 }
-                queue.add(neighbor);
             }
         }
             logger.log("updated node distances");
@@ -119,8 +108,19 @@ public class Dijkstra {
     private void relaxEdge(Edge targetEdge){
         relaxedEdges.add(targetEdge);
         logger.log("relaxed edge: " + targetEdge);
+        targetEdge.setAttribute("ui.class", "relaxed");
 
     }
+    public HashMap<Node, Integer> getNodeDistances() {
+        return nodeDistances;
+    }
 
+    public HashMap<Node, Node> getPreviousNode() {
+        return previousNode;
+    }
+
+    public ArrayList<Edge> getRelaxedEdges() {
+        return relaxedEdges;
+    }
 }
 

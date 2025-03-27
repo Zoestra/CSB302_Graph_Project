@@ -7,9 +7,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class logger {
-  private static final boolean consoleLogging = true;
+import static java.lang.Double.POSITIVE_INFINITY;
 
+public class logger {
+// Made by Zoestra Hammer
+// zoestrahammer@gmail.com
+// @zoestra on GitHub
+
+
+
+  private static boolean consoleLogging = true;
   private static final String logFilePath = "application.log";
   private static final SimpleDateFormat formatter = new SimpleDateFormat("[yy.MM.dd.u zzz kk:mm:ss:SSS]", Locale.US);
   private static BufferedWriter logWriter = null;
@@ -22,7 +29,7 @@ public class logger {
     String formatted = formatMessage(message);
     writeToFile(formatted);
     if (consoleLogging) {
-      System.out.println(formatted);
+      System.out.println(message);
     }
   }
 
@@ -54,6 +61,30 @@ public class logger {
 
   }
 
+  public static void log(double[][] matrix){
+    line();
+    log("Current Matrix");
+    int n = matrix.length;
+    for(double[] y : matrix){
+      String line = "";
+      String entry = "";
+      for(double x : y){
+        if(x == POSITIVE_INFINITY){
+          entry = "∞";
+        }
+        else{
+          entry = ((int) x + "");
+        }
+        while(entry.length() < 4){
+          entry = entry + " ";
+        }
+        line += entry;
+      }
+      log(line);
+    }
+    line();
+  }
+
   public static void log(Character code, Object object, String name){
     switch(code){
       case 'n':
@@ -70,7 +101,7 @@ public class logger {
   }
 
   public static void line(){
-    String line = "~~~~~~~~~~~~~~~~~~~~~~~~~~";
+    String line = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
 
     writeToFile(line);
     if(consoleLogging){
@@ -80,27 +111,21 @@ public class logger {
   public static void log(Exception e) {
     String exceptName = e.getClass().getSimpleName();
     String exceptMessage = e.getMessage();
-    String formatted = formatMessage("Exception: " + exceptName + " - " + exceptMessage);
+    String message = "Exception: " + exceptName + " - " + exceptMessage;
+    String formatted = formatMessage(message);
     String stackTrace = ExceptionUtils.readStackTrace(e);
     writeToFile(formatted);
     writeToFile(stackTrace);
     if (consoleLogging) {
-      System.err.println(formatted);
+      System.err.println(message);
       System.err.println(stackTrace);
     }
   }
 
 
-  public static void print(String message){
-    String formatted = formatMessage(message);
-    System.out.println(message);
-    writeToFile(formatted);
-  }
-
-
   public static void startup(){
-    line();
     log("Application started");
+    zoeskull();
 
   }
 
@@ -154,4 +179,43 @@ public class logger {
       System.err.println("Logger initialization failed: " + e.getMessage());
     }
   }
+
+  public static void setConsoleLogging(boolean consoleLogging) {
+    logger.consoleLogging = consoleLogging;
+  }
+
+  public static void zoeskull() {
+    log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    log("         0                      1        ");
+    log("        367     1321426910    842        ");
+    log("        001367 132142691084 20013        ");
+    log("         6713214269   1084200136         ");
+    log("          71321426     91084200          ");
+    log("         1367132142   6910842001         ");
+    log("        3671321426910842001   367        ");
+    log("        132      1426910       84        ");
+    log("        200       136713       21        ");
+    log("        426       91 084       20        ");
+    log("         013   67132  14269 10842        ");
+    log("           00136713214269108420          ");
+    log("      0      136713214269108     4       ");
+    log("      200     13 671  32  14   2691      ");
+    log("      08420       0    1     367132      ");
+    log("    142691084200         136713214269    ");
+    log("    1084   200136713  2142691            ");
+    log("                  0842001                ");
+    log("              3671321   4269108  4200    ");
+    log("      13   671321            4269108     ");
+    log("      4200136                  713       ");
+    log("        214                     26       ");
+    log("        910                              ");
+    log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    log("~~~~~~~~~~~~~~~~~~made by~~~~~~~~~~~~~~~~");
+    log("~~~~~~~~~~~~~~~Zoestra Hammer~~~~~~~~~~~~");
+    log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+  }
+
+
 }
